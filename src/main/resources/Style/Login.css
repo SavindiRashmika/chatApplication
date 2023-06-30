@@ -1,0 +1,7 @@
+.Background{
+
+    -fx-background-color: linear-gradient(to bottom,#0E2954,#1F6E8C,#2E8A99,#84A7A1);
+}
+.button{
+    -fx-background-color: #9DB2BF;
+}
