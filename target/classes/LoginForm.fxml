@@ -42,7 +42,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Button layoutX="112.0" layoutY="388.0" mnemonicParsing="false" onAction="#loginOnAction" prefHeight="30.0" prefWidth="126.0" style="-fx-background-radius: 10;" stylesheets="@Style/Login.css" text="JOIN CHAT">
+      <Button fx:id="buttonJoin" layoutX="112.0" layoutY="388.0" mnemonicParsing="false" onAction="#loginOnAction" prefHeight="30.0" prefWidth="126.0" style="-fx-background-radius: 10;" stylesheets="@Style/Login.css" text="JOIN CHAT">
          <effect>
             <InnerShadow />
          </effect>
@@ -50,7 +50,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <TextField fx:id="txtName" layoutX="53.0" layoutY="315.0" prefHeight="38.0" prefWidth="228.0" promptText="Enter Your Name">
+      <TextField fx:id="txtName" layoutX="53.0" layoutY="315.0" onAction="#nameOnAction" prefHeight="38.0" prefWidth="228.0" promptText="Enter Your Name">
          <font>
             <Font name="Bell MT" size="15.0" />
          </font>
