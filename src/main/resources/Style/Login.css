@@ -5,3 +5,6 @@
 .button{
     -fx-background-color: #9DB2BF;
 }
+.text-field{
+   -fx-background-radius: 10px;
+}

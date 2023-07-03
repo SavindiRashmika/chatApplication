@@ -29,6 +29,7 @@ public class LoginFormController{
 
 
     public void clientLogin()  throws IOException {
+        name = txtName.getText();
         if (Pattern.matches("^[a-zA-Z\\s]+", txtName.getText())) {
             Parent root = FXMLLoader.load(getClass().getResource("/view/ChatForm.fxml"));
             Scene scene = new Scene(root);
