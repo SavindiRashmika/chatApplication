@@ -5,20 +5,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ChatFormController extends Thread {
@@ -38,6 +40,9 @@ public class ChatFormController extends Thread {
     PrintWriter writer;
     Socket socket;
 
+    private FileChooser fileChooser;
+    private File filePath;
+
     @FXML
     void sendOnAction(ActionEvent event) {
         String msg = txtMsg.getText();
@@ -56,7 +61,11 @@ public class ChatFormController extends Thread {
 
     @FXML
     void photoSendOnAction(MouseEvent event) {
-
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Image");
+        this.filePath = fileChooser.showOpenDialog(stage);
+        writer.println(UserName.getText() + " " + "img" + filePath.getPath());
     }
     @FXML
     void emojiSendOnAction(MouseEvent event) {
@@ -67,7 +76,7 @@ public class ChatFormController extends Thread {
         }
     }
 
-    public void initialize() throws IOException {
+    public void initialize()  {
         String userName=LoginFormController.name;
         this.UserName.setText(userName);
         try {
@@ -110,9 +119,48 @@ public class ChatFormController extends Thread {
                     firstChars = st.substring(0, 3);
                 }
 
+
+                if (firstChars.equalsIgnoreCase("img")) {
+
+                    st = st.substring(3, st.length() - 1);
+
+
+                    File file = new File(st);
+                    Image image = new Image(file.toURI().toString());
+
+                    ImageView imageView = new ImageView(image);
+
+                    imageView.setFitHeight(150);
+                    imageView.setFitWidth(200);
+
+
+                    HBox hBox = new HBox(10);
+                    hBox.setAlignment(Pos.BOTTOM_RIGHT);
+
+
+                    if (!cmd.equalsIgnoreCase(UserName.getText())) {
+
+                        vbox.setAlignment(Pos.TOP_LEFT);
+                        hBox.setAlignment(Pos.CENTER_LEFT);
+
+
+                        Text text1 = new Text("  " + cmd + " :");
+                        hBox.getChildren().add(text1);
+                        hBox.getChildren().add(imageView);
+
+                    } else {
+                        hBox.setAlignment(Pos.BOTTOM_RIGHT);
+                        hBox.getChildren().add(imageView);
+                        Text text1 = new Text(": Me ");
+                        hBox.getChildren().add(text1);
+
+
+                    }
+
+                    Platform.runLater(() -> vbox.getChildren().addAll(hBox));
+
+                } else {
                 TextFlow tempFlow = new TextFlow();
-
-
                 if (!cmd.equalsIgnoreCase(UserName.getText() + ":")) {
                     Text txtName = new Text(cmd + " ");
                     txtName.getStyleClass().add("txtName");
@@ -130,19 +178,13 @@ public class ChatFormController extends Thread {
                 TextFlow flow = new TextFlow(tempFlow);
                 HBox hBox = new HBox(12);
 
-
-
-
                 if (!cmd.equalsIgnoreCase(UserName.getText() + ":")) {
-
-
                     vbox.setAlignment(Pos.TOP_LEFT);
                     hBox.setAlignment(Pos.CENTER_LEFT);
                     hBox.getChildren().add(flow);
                     hBox.setPadding(new Insets(2,5,2,10));
 
                 } else {
-
                     Text text2 = new Text(fullMsg + ": Me");
                     TextFlow flow2 = new TextFlow(text2);
                     hBox.setAlignment(Pos.BOTTOM_RIGHT);
@@ -157,6 +199,8 @@ public class ChatFormController extends Thread {
                 }
 
                 Platform.runLater(() -> vbox.getChildren().addAll(hBox));
+
+                }
             }
     } catch (IOException e) {
             e.printStackTrace();
@@ -195,9 +239,13 @@ public class ChatFormController extends Thread {
         txtMsg.appendText("\uD83D\uDE2E");
     }
 
-    public void partyOnAction(MouseEvent mouseEvent) { txtMsg.appendText("\uD83D\uDC4D"); }
+    public void partyOnAction(MouseEvent mouseEvent) {
+        txtMsg.appendText("\uD83D\uDC4D");
+    }
 
-    public void angryOnAction(MouseEvent mouseEvent) { txtMsg.appendText("\uD83D\uDE21"); }
+    public void angryOnAction(MouseEvent mouseEvent) {
+        txtMsg.appendText("\uD83D\uDE21");
+    }
 
     public void sadOnAction(MouseEvent mouseEvent) {
         txtMsg.appendText("\uD83D\uDE1F");
